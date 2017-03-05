@@ -172,3 +172,4 @@ nbdist/
 .nb-gradle/
 /.idea/
 !/lib/h2-1.4.193.jar
+/Musikdatenbank.iml
