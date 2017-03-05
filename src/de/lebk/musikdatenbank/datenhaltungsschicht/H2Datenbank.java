@@ -13,13 +13,12 @@ public class H2Datenbank {
         String table = "lied";
         Statement statement = DbZugriff.getZugriffsObjekt().getConnection().createStatement();
 
-        String dropTable = "DROP TABLE IF EXISTS " + table + ";";
-        statement.executeUpdate(dropTable);
-        System.out.println("Table dropped");
+        //String dropTable = "DROP TABLE IF EXISTS " + table + ";";
+        //statement.executeUpdate(dropTable);
+        //System.out.println("Table dropped");
 
         String createTable = "CREATE TABLE IF NOT EXISTS " + table
                 + " (lied VARCHAR(76) PRIMARY KEY NOT NULL, interpret VARCHAR(255) NOT NULL)";
-
         statement.executeUpdate(createTable);
 
         System.out.println("Table created");

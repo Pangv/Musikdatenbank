@@ -13,6 +13,10 @@ public class Lied {
         this.interpret = interpret;
     }
 
+    public Lied(Lied lied) {
+        new Lied(lied.getLiedname(), lied.getInterpret());
+    }
+
     public String getLiedname() {
         return liedname;
     }

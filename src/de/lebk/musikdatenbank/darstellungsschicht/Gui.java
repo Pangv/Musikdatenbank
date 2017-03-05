@@ -78,6 +78,7 @@ public class Gui {
                 e1.printStackTrace();
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Treiber wurde nicht gefunden");
             } finally {
                 if (DbZugriff.getZugriffsObjekt().getConnection() != null) {
                     try {
@@ -95,15 +96,16 @@ public class Gui {
                 aktuellesLied.setLiedname(txtfLiedname.getText());
                 aktuellesLied.setInterpret(txtfInterpret.getText());
 
-                DbZugriff.getZugriffsObjekt().speicherLied(aktuellesLied);
+                System.out.println("Aktion " + (DbZugriff.getZugriffsObjekt().aenderLied(aktuellesLied) ? "erfolgreich" : "fehlgeschlagen"));
 
             } catch (SQLException e1) {
                 e1.printStackTrace();
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Treiber wurde nicht gefunden");
             }
 
-            Global.getInstance().speichereLied(aktuellesLied);
+            Global.getInstance().aendereLied(aktuellesLied);
 
 
         });

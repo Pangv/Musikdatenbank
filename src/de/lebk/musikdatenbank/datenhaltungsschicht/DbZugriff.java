@@ -88,7 +88,7 @@ public class DbZugriff {
         boolean isSuccessful;
         oeffneDb();
         String sql = "UPDATE lied SET lied = '" + lied.getLiedname() + "', interpret = '"
-                + lied.getInterpret() + "';";
+                + lied.getInterpret() + "' WHERE lied = '"+ lied.getLiedname() +"';";
         isSuccessful = aendereDaten(sql);
         schliesseDb();
         return isSuccessful;
