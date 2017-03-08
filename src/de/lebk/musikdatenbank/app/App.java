@@ -2,7 +2,8 @@ package de.lebk.musikdatenbank.app;
 
 import de.lebk.musikdatenbank.darstellungsschicht.Gui;
 import de.lebk.musikdatenbank.datenhaltungsschicht.DbZugriff;
-import de.lebk.musikdatenbank.datenhaltungsschicht.Global;
+import de.lebk.musikdatenbank.datenhaltungsschicht.LiedSpeicherDB;
+import de.lebk.musikdatenbank.datenhaltungsschicht.LiedSpeicherGlobal;
 import de.lebk.musikdatenbank.datenhaltungsschicht.H2Datenbank;
 import de.lebk.musikdatenbank.fachschicht.Lied;
 
@@ -15,12 +16,14 @@ import java.util.Iterator;
  */
 public class App {
 
+
+
     public static void main(String[] args) {
         erstelleH2();
         Gui.main(args);
 
 
-        Iterator<Lied> liedIterator = Global.getInstance().getLieder().iterator();
+        Iterator<Lied> liedIterator = LiedSpeicherGlobal.getInstance().getLieder().iterator();
         Lied lied;
         int i = 1;
         while (liedIterator.hasNext()) {
@@ -32,10 +35,12 @@ public class App {
 
 
     private static void erstelleH2() {
+        LiedSpeicherDB lsdb = new LiedSpeicherDB();
+
         try {
             DbZugriff.getZugriffsObjekt().oeffneDb();
             new H2Datenbank();
-            DbZugriff.getZugriffsObjekt().getLieder();
+            lsdb.getLieder();
             DbZugriff.getZugriffsObjekt().schliesseDb();
         } catch (SQLException e) {
             e.printStackTrace();

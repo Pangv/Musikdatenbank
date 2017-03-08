@@ -1,5 +1,6 @@
 package de.lebk.musikdatenbank.datenhaltungsschicht;
 
+import de.lebk.musikdatenbank.fachschicht.ILiedSpeicher;
 import de.lebk.musikdatenbank.fachschicht.Lied;
 
 import java.sql.*;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 /**
  * @author sopaetzel
  */
-public class DbZugriff {
+public class DbZugriff{
 
     private static DbZugriff zugriffsObjekt = new DbZugriff();
     private Connection connection;
@@ -40,60 +41,6 @@ public class DbZugriff {
     public void schliesseDb() throws SQLException {
         connection.close();
     }
-
-    //------------------- LIEDER --------------------------------------//
-    public ArrayList<Lied> getLieder() throws SQLException {
-        ArrayList<Lied> lieder = new ArrayList<>();
-        String sql = "SELECT * FROM lied";
-        ResultSet rs = leseDaten(sql);
-        System.out.println("Result-Set: ");
-        System.out.println("==============\n");
-        while (rs.next()) {
-            System.out.printf("%s, %s\n", rs.getString(1),
-                    rs.getString(2));
-            lieder.add(new Lied(rs.getString(1), rs.getString(2)));
-            Global.getInstance().setLieder(lieder);
-        }
-        System.out.println(/*break*/);
-        return lieder;
-    }
-
-    public Lied getLied(String liedname) throws SQLException {
-        String sql = "SELECT * FROM lied WHERE lied = '" + liedname + "';";
-        ResultSet rs = leseDaten(sql);
-        rs.next();
-        return new Lied(rs.getString(1), rs.getString(2));
-    }
-
-    public boolean speicherLied(Lied lied) throws SQLException, ClassNotFoundException {
-        boolean isSuccessful;
-        oeffneDb();
-        String sql = "MERGE INTO lied VALUES('" + lied.getLiedname() + "', '" + lied.getInterpret() + "');";
-        isSuccessful = aendereDaten(sql);
-        schliesseDb();
-        return isSuccessful;
-    }
-
-    public boolean loescheLied(Lied lied) throws SQLException, ClassNotFoundException {
-        boolean isSuccessful;
-        oeffneDb();
-        String sql = "DELETE FROM lied WHERE lied = '" + lied.getLiedname()
-                + "' interpret = '" + lied.getInterpret() + "';";
-        isSuccessful = aendereDaten(sql);
-        schliesseDb();
-        return isSuccessful;
-    }
-
-    public boolean aenderLied(Lied lied) throws SQLException, ClassNotFoundException {
-        boolean isSuccessful;
-        oeffneDb();
-        String sql = "UPDATE lied SET lied = '" + lied.getLiedname() + "', interpret = '"
-                + lied.getInterpret() + "' WHERE lied = '"+ lied.getLiedname() +"';";
-        isSuccessful = aendereDaten(sql);
-        schliesseDb();
-        return isSuccessful;
-    }
-
 
     void getMetaInformation() throws SQLException {
         DatabaseMetaData metaData = this.connection.getMetaData();

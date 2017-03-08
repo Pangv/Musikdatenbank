@@ -1,7 +1,8 @@
 package de.lebk.musikdatenbank.darstellungsschicht;
 
 import de.lebk.musikdatenbank.datenhaltungsschicht.DbZugriff;
-import de.lebk.musikdatenbank.datenhaltungsschicht.Global;
+import de.lebk.musikdatenbank.datenhaltungsschicht.LiedSpeicherDB;
+import de.lebk.musikdatenbank.datenhaltungsschicht.LiedSpeicherGlobal;
 import de.lebk.musikdatenbank.fachschicht.Lied;
 
 import javax.swing.*;
@@ -26,6 +27,9 @@ public class Gui {
 
     private Lied aktuellesLied;
     private int position;
+
+
+    private LiedSpeicherDB lsdb = new LiedSpeicherDB();
 
 
     public Gui() {
@@ -69,12 +73,13 @@ public class Gui {
 
             try {
                 DbZugriff.getZugriffsObjekt().oeffneDb();
-                aktuellesLied = DbZugriff.getZugriffsObjekt().getLied(liedname);
+                aktuellesLied = lsdb.getLied(liedname);
 
                 txtfInterpret.setText(aktuellesLied.getInterpret());
 
                 DbZugriff.getZugriffsObjekt().schliesseDb();
             } catch (SQLException e1) {
+                JOptionPane.showMessageDialog(null, "Es existiert kein Lied mit dem Namen: " + liedname + " !");
                 e1.printStackTrace();
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
@@ -84,7 +89,7 @@ public class Gui {
                     try {
                         DbZugriff.getZugriffsObjekt().schliesseDb();
                     } catch (SQLException e1) {
-                        e1.printStackTrace();
+                       e1.printStackTrace();
                     }
                 }
             }
@@ -96,7 +101,7 @@ public class Gui {
                 aktuellesLied.setLiedname(txtfLiedname.getText());
                 aktuellesLied.setInterpret(txtfInterpret.getText());
 
-                System.out.println("Aktion " + (DbZugriff.getZugriffsObjekt().aenderLied(aktuellesLied) ? "erfolgreich" : "fehlgeschlagen"));
+                System.out.println("Aktion " + (lsdb.aendereLied(aktuellesLied) ? "erfolgreich" : "fehlgeschlagen"));
 
             } catch (SQLException e1) {
                 e1.printStackTrace();
@@ -105,23 +110,23 @@ public class Gui {
                 JOptionPane.showMessageDialog(null, "Treiber wurde nicht gefunden");
             }
 
-            Global.getInstance().aendereLied(aktuellesLied);
+            LiedSpeicherGlobal.getInstance().aendereLied(aktuellesLied);
 
 
         });
         btnZurueck.addActionListener(e -> {
             if (position-- <= 0) {
-                position = Global.getInstance().getLieder().size() - 1;
+                position = LiedSpeicherGlobal.getInstance().getLieder().size() - 1;
             }
-            aktuellesLied = Global.getInstance().getLieder().get(position);
+            aktuellesLied = LiedSpeicherGlobal.getInstance().getLieder().get(position);
             txtfLiedname.setText(aktuellesLied.getLiedname());
             txtfInterpret.setText(aktuellesLied.getInterpret());
         });
         btnVorwaerts.addActionListener(e -> {
-            if (position++ >= Global.getInstance().getLieder().size() - 1) {
+            if (position++ >= LiedSpeicherGlobal.getInstance().getLieder().size() - 1) {
                 position = 0;
             }
-            aktuellesLied = Global.getInstance().getLieder().get(position);
+            aktuellesLied = LiedSpeicherGlobal.getInstance().getLieder().get(position);
             txtfLiedname.setText(aktuellesLied.getLiedname());
             txtfInterpret.setText(aktuellesLied.getInterpret());
         });
@@ -129,7 +134,7 @@ public class Gui {
 
     private void setInitialSong() {
         this.position = 0;
-        this.aktuellesLied = Global.getInstance().getLieder().get(position);
+        this.aktuellesLied = LiedSpeicherGlobal.getInstance().getLieder().get(position);
         txtfLiedname.setText(aktuellesLied.getLiedname());
         txtfInterpret.setText(aktuellesLied.getInterpret());
     }
